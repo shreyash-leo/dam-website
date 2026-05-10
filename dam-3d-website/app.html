@@ -120,105 +120,119 @@
       transform: translateY(-1px);
     }
 
+    /* ENHANCED INFO PANEL: Wider + Fully glass aesthetic with deep transparency */
     #infoPanel {
       position: absolute;
       right: 28px;
       top: 100px;
-      width: 360px;
-      background: rgba(250, 246, 240, 0.96);
-      backdrop-filter: blur(24px);
-      border-radius: 28px;
-      border: 1px solid rgba(80, 65, 50, 0.2);
+      width: 480px;           /* dramatically wider */
+      max-width: 90vw;        /* responsive on smaller screens */
+      background: rgba(245, 240, 234, 0.78);  /* more transparent background */
+      backdrop-filter: blur(28px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 245, 0.4);
       overflow: hidden;
       z-index: 100;
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 20px 38px -12px rgba(0, 0, 0, 0.18);
+      transition: all 0.2s ease;
     }
 
     .panel-header {
-      padding: 20px 24px 12px;
-      border-bottom: 1px solid rgba(60, 45, 30, 0.1);
+      padding: 20px 28px 12px;
+      border-bottom: 1px solid rgba(80, 65, 50, 0.15);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      background: rgba(250, 245, 238, 0.5);
     }
 
     .panel-header .icon-badge {
-      width: 32px;
-      height: 32px;
-      background: rgba(80, 65, 50, 0.15);
-      border-radius: 20px;
+      width: 36px;
+      height: 36px;
+      background: rgba(70, 55, 40, 0.2);
+      border-radius: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 1.2rem;
+      backdrop-filter: blur(4px);
     }
 
     .panel-title {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 1.8px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: #6B5A48;
+      color: #5C4A34;
     }
 
     .panel-content {
-      padding: 22px 24px 28px;
+      padding: 24px 28px 32px;
       max-height: calc(100vh - 180px);
       overflow-y: auto;
       color: #2C2418;
+      scrollbar-width: thin;
+    }
+
+    /* Enhanced scrollbar to blend with transparency */
+    .panel-content::-webkit-scrollbar {
+      width: 5px;
+    }
+    .panel-content::-webkit-scrollbar-track {
+      background: rgba(80, 65, 50, 0.12);
+      border-radius: 10px;
+    }
+    .panel-content::-webkit-scrollbar-thumb {
+      background: rgba(80, 65, 50, 0.5);
+      border-radius: 10px;
     }
 
     #infoContent {
-      font-size: 0.9rem;
-      line-height: 1.55;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-weight: 450;
     }
 
     #infoContent h3 {
-      font-size: 1.35rem;
-      font-weight: 600;
-      margin: 0 0 10px 0;
-      color: #1F1A12;
+      font-size: 1.45rem;
+      font-weight: 650;
+      margin: 0 0 12px 0;
+      color: #1F1A10;
       font-family: 'Space Grotesk', monospace;
+      letter-spacing: -0.3px;
     }
 
     #infoContent b {
-      font-weight: 600;
-      color: #6B4C2C;
+      font-weight: 650;
+      color: #8B5E3C;
     }
 
     #infoContent ul {
       margin: 14px 0;
-      padding-left: 20px;
+      padding-left: 22px;
     }
 
-    .panel-content::-webkit-scrollbar {
-      width: 4px;
-    }
-    .panel-content::-webkit-scrollbar-track {
-      background: rgba(80, 65, 50, 0.08);
-      border-radius: 8px;
-    }
-    .panel-content::-webkit-scrollbar-thumb {
-      background: rgba(80, 65, 50, 0.35);
-      border-radius: 8px;
+    #infoContent li {
+      margin: 6px 0;
     }
 
-    #tooltip {
+    .tooltip-modern {
       position: absolute;
-      background: rgba(30, 25, 20, 0.92);
-      backdrop-filter: blur(12px);
-      color: #F9F2E7;
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-size: 0.75rem;
+      background: rgba(30, 25, 20, 0.88);
+      backdrop-filter: blur(16px);
+      color: #FCF3E8;
+      padding: 8px 20px;
+      border-radius: 48px;
+      font-size: 0.8rem;
       font-weight: 500;
       display: none;
       pointer-events: none;
       z-index: 1200;
       font-family: 'Inter', monospace;
-      border: 1px solid rgba(255, 240, 220, 0.2);
+      border: 1px solid rgba(255, 235, 200, 0.3);
       white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      letter-spacing: 0.3px;
     }
 
     .loading-indicator {
@@ -234,12 +248,13 @@
       font-weight: 500;
       z-index: 1200;
       backdrop-filter: blur(12px);
-      background: rgba(30, 25, 20, 0.9);
-      border: 1px solid rgba(255, 240, 210, 0.2);
+      background: rgba(30, 25, 20, 0.92);
+      border: 1px solid rgba(255, 240, 210, 0.25);
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.25s ease;
       white-space: nowrap;
+      font-family: monospace;
     }
     .loading-indicator.active {
       opacity: 1;
@@ -250,22 +265,25 @@
       bottom: 18px;
       left: 20px;
       font-size: 0.7rem;
-      color: rgba(60, 45, 30, 0.5);
-      background: rgba(250, 246, 240, 0.7);
+      color: rgba(60, 45, 30, 0.65);
+      background: rgba(250, 246, 240, 0.65);
       backdrop-filter: blur(6px);
       padding: 5px 14px;
       border-radius: 28px;
       pointer-events: none;
       font-family: monospace;
       z-index: 100;
+      font-weight: 500;
     }
 
     @media (max-width: 800px) {
-      #infoPanel { width: 300px; right: 16px; top: 95px; }
+      #infoPanel { width: 420px; right: 16px; top: 95px; }
       .center-model-selector { top: 75px; padding: 4px 10px; gap: 4px; }
       .model-chip { padding: 5px 14px; font-size: 0.7rem; }
+      .panel-content { padding: 18px 22px 26px; }
     }
     @media (max-width: 600px) {
+      #infoPanel { width: calc(100% - 32px); right: 16px; left: 16px; top: 100px; max-width: none; }
       .center-model-selector { width: 90%; justify-content: center; }
       .model-chip { padding: 6px 12px; }
       .logo { font-size: 0.75rem; padding: 4px 10px; }
@@ -287,13 +305,14 @@
     <button class="model-chip" data-model="models/dam3.glb">Arch Dam</button>
   </div>
 
-  <div id="tooltip"></div>
+  <div id="tooltip" class="tooltip-modern"></div>
   <div class="controls-note">🖱️ Drag to orbit • Scroll zoom • Right-click pan</div>
 
+  <!-- WIDER & TRANSPARENT INFO CARD -->
   <div id="infoPanel">
     <div class="panel-header">
       <div class="icon-badge">📐</div>
-      <span class="panel-title">ENGINEERING INSIGHTS</span>
+      <span class="panel-title">ENGINEERING INSIGHTS • TECHNICAL DEEP DIVE</span>
     </div>
     <div class="panel-content">
       <p id="infoContent">Click on any part of the dam to begin learning.</p>
@@ -342,27 +361,77 @@
 
     let objectPartMap = modelConfigs["models/dam.glb"].partMap;
 
+    // UPDATED ENGINEERING INFO: more coherent, readable but in-depth content
     const damInfo = {
-      dam_wall: `<h3>⬟ Dam Wall</h3><b>Structural backbone</b><br>Primary barrier withstanding hydrostatic pressure. Engineered to resist sliding, overturning, and internal uplift.<br><br><b>Key engineering metrics:</b><ul><li>Stability factor >1.5 against sliding</li><li>Compressive stress limits (concrete: 7–25 MPa)</li><li>Seepage cutoff & drainage system</li></ul><b>Materials:</b> Roller-compacted concrete / mass concrete.`,
-      reservoir: `<h3>💧 Reservoir</h3><b>Water storage lifeline</b><br>Man-made lake formed behind dam. Storage is zoned into:<ul><li><b>Dead storage:</b> sediment trap, below outlet inverts</li><li><b>Active storage:</b> usable for power, irrigation, municipal supply</li><li><b>Flood control storage:</b> temporary surcharge</li></ul>Operational rule curves manage drought & flood risks.`,
-      powerhouse: `<h3>⚡ Powerhouse</h3><b>Hydropower conversion</b><br>Transforms hydraulic energy → mechanical → electrical. High-efficiency turbines matched to head & flow.<br><br><b>Turbine types:</b> Francis (medium head), Kaplan (low head), Pelton (high head).`,
-      terrain: `<h3>⛰️ Abutments & Terrain</h3><b>Geotechnical interface</b><br>Natural valley walls that stabilize the dam. Critical for arch dams where thrust transfers entirely to rock abutments.`,
-      spillway: `<h3>🌊 Spillway</h3><b>Flood discharge system</b><br>Prevents overtopping and uncontrolled release. Design flood (PMF) routed through ogee crest or chute.`,
-      gates: `<h3>⚙️ Control Gates</h3><b>Flow regulation</b><br>Radial (Tainter) gates, sluice gates, or vertical lift. Essential for reservoir release and emergency drawdown.`,
-      intake: `<h3>🚰 Intake Structure</h3><b>Water entry portal</b><br>Trash racks remove debris, emergency gates provide shut-off, penstocks convey water to turbines.`,
-      outlet: `<h3>💦 Outlet Works</h3><b>Controlled release</b><br>Allows release of environmental flows, irrigation supply, or reservoir lowering for maintenance.`,
-      foundation: `<h3>⛏️ Foundation</h3><b>Load transfer zone</b><br>Rigorous grouting, consolidation grouting, and drainage galleries prevent uplift pressure.`,
-      general: `<h3>🏛️ Dam Engineering Interactive</h3><b>Explore 3D hydraulic structures</b><br>A dam is a critical infrastructure for:<ul><li>Water supply & irrigation</li><li>Hydroelectric generation</li><li>Flood risk reduction</li><li>Navigation & recreation</li></ul><hr><i>Click any colored element for technical insights.</i>`
+      dam_wall: `<h3>⬟ Dam Wall (Monolith)</h3><b>Primary structural barrier — hydrostatic force resistance</b><br><br>
+      <b>🔧 Engineering fundamentals:</b> The dam wall withstands horizontal water pressure, uplift, sediment loads, and seismic forces. For concrete gravity dams, stability relies on self-weight (mass concrete) creating a sufficient factor of safety (>1.5 against sliding, >1.0 against overturning).<br><br>
+      <b>📊 Stress analysis:</b> Compressive stresses at heel/toe are maintained within 7–25 MPa for conventional concrete; RCC permits faster construction. Thermal contraction joints prevent cracking; drainage galleries reduce uplift pressure via relief wells.<br><br>
+      <b>⚙️ Construction methods:</b> Roller-compacted concrete (RCC) or conventional mass placement with cooling pipes. For earthfill, core zones use impervious clay with granular filters and rockfill shoulders. Recent advances include self-compacting concrete and fiber reinforcement.<br><br>
+      <b>🛡️ Safety monitoring:</b> Piezometers, inclinometers, and joint meters track internal strains; visual inspections focus on leakage, spalling, or displacement patterns.`,
+      
+      reservoir: `<h3>💧 Reservoir & Watershed Management</h3><b>Strategic water storage — multi‑objective regulation</b><br><br>
+      <b>📐 Storage zones classification:</b><ul><li><b>Dead storage:</b> Below lowest outlet, traps sediment and maintains minimum ecological pool.</li><li><b>Active/conservation storage:</b> Usable volume for irrigation, municipal supply, hydropower generation.</li><li><b>Flood control storage:</b> Temporary surcharge above normal pool for attenuating flood peaks.</li><li><b>Buffer pool:</b> Emergency drought reserve.</li></ul>
+      <b>📈 Operational rule curves:</b> Based on historical inflows, demand forecasts, and environmental flow requirements. Advanced models incorporate machine learning (LSTM networks) for inflow prediction and real-time gate control.<br><br>
+      <b>🌱 Environmental considerations:</b> Reservoir stratification affects water quality; multi-level intakes minimize thermal pollution. Sedimentation reduces capacity over time — sustainable strategies include sluicing, dredging, and watershed management.<br><br>
+      <b>🧪 Key metrics:</b> Residence time, trap efficiency, evaporation losses, and trophic state index (TSI) for limnological monitoring.`,
+      
+      powerhouse: `<h3>⚡ Hydroelectric Powerhouse</h3><b>Energy conversion — hydraulic to electrical grid</b><br><br>
+      <b>🏭 Turbine selection matrix:</b><ul><li><b>Francis turbine:</b> Medium head (20–700 m), high efficiency (88–95%), most common.</li><li><b>Kaplan propeller turbine:</b> Low head (2–40 m), adjustable blades for variable flow.</li><li><b>Pelton wheel:</b> Very high head (>300 m), impulse design for mountainous sites.</li></ul>
+      <b>🔌 Electrical & mechanical auxiliaries:</b> Generators (synchronous), excitation systems, governors (digital PID), cooling circuits, and step-up transformers. Digital twins enable predictive maintenance and vibration analysis.<br><br>
+      <b>📐 Hydraulic design:</b> Penstock diameter, surge tank (to prevent water hammer), and draft tube recovery (kinetic energy regain). Efficiency improvements via computational fluid dynamics (CFD).<br><br>
+      <b>📊 Power equation:</b> P = η × ρ × g × Q × H (kW). Modern plants achieve 90%+ overall efficiency. Pumped storage plants offer grid stability and energy arbitrage.`,
+      
+      terrain: `<h3>⛰️ Abutments & Foundation Geology</h3><b>Geotechnical interface — load transfer & stability</b><br><br>
+      <b>🧭 Rock mechanics essentials:</b> Abutments must resist thrust forces (especially arch dams) with unconfined compressive strength >25 MPa. Discontinuities (joints, faults, bedding planes) are treated via consolidation grouting, dental concrete, or rock bolts.<br><br>
+      <b>🪨 Site investigation methods:</b> Seismic refraction, borehole logging (rock quality designation - RQD), in‑situ shear tests, and Lugeon tests for permeability assessment.<br><br>
+      <b>🔨 Remedial measures:</b> Curtain grouting creates low-permeability barrier, drainage blankets reduce uplift, and shear keys improve sliding resistance. Slope stability analyses (limit equilibrium & FEM) evaluate potential failure surfaces.<br><br>
+      <b>📈 Instrumentation:</b> Extensometers, inclinometers, and load cells monitoring rock deformation under reservoir impoundment.`,
+      
+      spillway: `<h3>🌊 Spillway & Flood Routing</h3><b>Emergency discharge — overtopping prevention & flood mitigation</b><br><br>
+      <b>🧮 Hydraulic design:</b> Ogee-crested spillways follow nappe profile for maximum discharge coefficient (typically 2.0–2.2). Chute spillways convey water downstream with stilling basins (hydraulic jump) for energy dissipation.<br><br>
+      <b>📊 Design flood criteria:</b> Probable Maximum Flood (PMF) or 0.01% annual exceedance probability (AEP). Spillway capacity must pass routed outflow without exceeding maximum reservoir level.<br><br>
+      <b>⚙️ Gate configurations:</b> Radial (Tainter) gates, vertical lift gates, fuse plugs, or labyrinth weirs to increase discharge capacity. Automation with real-time inflow forecasting and remote operation.<br><br>
+      <b>💥 Energy dissipators:</b> Flip buckets, plunge pools, baffle blocks, or stilling basins to prevent scour downstream. Physical modeling (Froude similarity) verifies performance.`,
+      
+      gates: `<h3>⚙️ Control Gates & Hydraulic Steel Structures</h3><b>Flow regulation — precision release mechanisms</b><br><br>
+      <b>🔄 Gate types & applications:</b><ul><li><b>Radial (Tainter) gates:</b> Efficient for spillway crests; trunnion design reduces hoist force.</li><li><b>Vertical lift gates (sluice gates):</b> High head outlets, often used for bottom outlets.</li><li><b>Emergency & maintenance gates:</b> Stoplogs, bulkheads for dewatering works.</li></ul>
+      <b>🔧 Hydraulic forces:</b> Hydrostatic + hydrodynamic loads, vibration risk (gate flutter) mitigated by venting and stiffener design. Hoist systems include hydraulic cylinders or wire rope hoists.<br><br>
+      <b>📏 Design standards:</b> USACE, USBR, or Eurocode guidelines for steel structures, corrosion protection (epoxy coating, cathodic protection), and leakage control (rubber seals).<br><br>
+      <b>⚠️ Operational safety:</b> Gate position sensors, emergency backup power, and periodic non-destructive testing (ultrasonic, magnetic particle inspection).`,
+      
+      intake: `<h3>🚰 Intake Structure & Trashrack Systems</h3><b>Water conveyance — quality control & sediment management</b><br><br>
+      <b>🏞️ Hydraulic design:</b> Intakes are placed at optimal elevation to avoid drawing warm surface water (if ecologically sensitive) or sediment-laden bottom layers. Multi-level intakes provide selective withdrawal capability.<br><br>
+      <b>🪣 Trashracks & debris control:</b> Bar spacing based on turbine runner dimensions (typically 50–150 mm). Raked designs and automated cleaning rakes prevent clogging. Velocity through trashrack kept below 0.5–1 m/s to reduce head loss.<br><br>
+      <b>🔐 Emergency closure:</b> Emergency gates (stoplogs or high-pressure gates) allow penstock isolation for maintenance. Intake towers include trashrack structures, gate slots, and ventilation shafts.<br><br>
+      <b>📉 Sediment routing:</b> Vortex tubes or flushing channels divert bedload. Low-level outlets release density currents.`,
+      
+      outlet: `<h3>💦 Outlet Works & River Release</h3><b>Controlled release — environmental flows & drawdown</b><br><br>
+      <b>💧 Functions:</b> Provide minimum ecological flow downstream, manage reservoir levels during droughts or maintenance, and allow reservoir drawdown for inspection. Outlet capacity typically ranges 5–20% of spillway design flood.<br><br>
+      <b>📐 Configurations:</b> Bottom outlets (low-level) through the dam or diversion tunnel, often protected by multiple gates for redundancy. Conduit hydraulics require air vents to prevent sub-atmospheric pressures and cavitation.<br><br>
+      <b>🌿 Environmental flows:</b> Regulated releases mimic natural hydrograph patterns (freshets, baseflows) for aquatic habitat protection. Fish passage facilities may be integrated where outlets serve as downstream migration routes.<br><br>
+      <b>🔧 Valves & dissipators:</b> Hollow-jet valves, sleeve valves, or fixed-cone valves for high-head dissipation. Plunge pools dissipate energy and prevent erosion.`,
+      
+      foundation: `<h3>⛏️ Foundation & Grouting Curtain</h3><b>Load-bearing interface — seepage control & consolidation</b><br><br>
+      <b>🛠️ Site preparation:</b> Overburden removal, dental concrete for surface irregularities, and shotcrete for temporary stabilization. Consolidation grouting fills near-surface fractures (depth 5–15 m) to increase rock stiffness.<br><br>
+      <b>💧 Curtain grouting:</b> Deep grout curtain (often 0.5–1.0 times the hydraulic head) creates low-permeability barrier along the dam axis. Grout takes (water/cement ratio) are monitored via Lugeon tests. Post-grouting verification by water pressure tests and borehole imaging.<br><br>
+      <b>📉 Uplift control:</b> Drainage galleries equipped with weepholes intercept seepage; relief wells reduce uplift pressures. Uplift pressure monitoring via piezometers ensures safety.<br><br>
+      <b>📊 Finite element modeling:</b> Seepage analysis (SEEP/W, PLAXIS) simulates phreatic surfaces; stress-deformation models (FLAC3D) ensure settlement tolerance under full reservoir loads.`,
+      
+      general: `<h3>🏛️ Dam Engineering Core Principles</h3><b>Interactive hydraulic & geotechnical exploration</b><br><br>
+      Modern dam engineering integrates hydrology, structural mechanics, geotechnics, and environmental science. Key threats include overtopping, internal erosion (piping), slope instability, and foundation settlement.<br><br>
+      <b>📐 Design criteria:</b><ul><li>Structural stability: sliding FOS ≥ 1.5, overturning FOS ≥ 1.4</li><li>Permissible stresses: concrete compression ≤ 0.25 f'c, no tension under normal loads</li><li>Seismic performance: MDE (Maximum Design Earthquake) acceleration</li><li>Hydrologic safety: PMF routed with freeboard ≥ 1–3 m</li></ul>
+      <b>🛰️ Instrumentation & monitoring:</b> Pendulums, piezometers, weirs, thermistors, automated data acquisition systems, and satellite InSAR for displacement tracking.<br><br>
+      <b>🌍 Sustainability:</b> Run-of-river designs reduce flooding impact, fish ladders restore connectivity, sediment bypass tunnels minimize downstream erosion, and re-operation for environmental flows.<br><br>
+      <b>🔍 Click any colored element (Dam Wall, Reservoir, Gates, etc.) for detailed technical breakdowns.</b>`
     };
+    
     const tooltipNames = { foundation: "Foundation", dam_wall: "Dam Wall", reservoir: "Reservoir", spillway: "Spillway", gates: "Gates", powerhouse: "Power House", intake: "Intake", outlet: "Outlet Works", terrain: "Abutments" };
 
-    // THREE.JS Setup - NO FOG to keep colors vibrant!
+    // ========= THREE.JS SCENE =========
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xF5F0EA);
-    // REMOVED FOG - fog was causing faded/washed out colors at distance
-    // scene.fog = null;  // Explicitly no fog - colors stay rich and vibrant
-
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500); // Increased far plane for extreme zoom out
+    
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -379,14 +448,13 @@
     controls.screenSpacePanning = true;
     controls.maxPolarAngle = Math.PI / 1.9;
     controls.minDistance = 3.5;
-    controls.maxDistance = 200;  // Massive range for extreme zoom out
+    controls.maxDistance = 200;
 
-    // SUPERCHARGED LIGHTING - brighter, more vibrant colors
-    const ambient = new THREE.AmbientLight(0xffffff, 0.95);  // Increased ambient for better base brightness
+    // Enhanced lighting: vibrant
+    const ambient = new THREE.AmbientLight(0xffffff, 0.98);
     scene.add(ambient);
-    
-    const sunLight = new THREE.DirectionalLight(0xfff5e6, 1.8);
-    sunLight.position.set(10, 20, 8);
+    const sunLight = new THREE.DirectionalLight(0xfff5e6, 1.9);
+    sunLight.position.set(10, 22, 8);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -398,27 +466,21 @@
     sunLight.shadow.camera.bottom = -15;
     scene.add(sunLight);
     
-    const fillLightWarm = new THREE.PointLight(0xd4b88a, 0.9);
+    const fillLightWarm = new THREE.PointLight(0xd4b88a, 0.95);
     fillLightWarm.position.set(5, 6, 8);
     scene.add(fillLightWarm);
-    
-    const fillLightCool = new THREE.PointLight(0xa8c4d4, 0.7);
+    const fillLightCool = new THREE.PointLight(0xa8c4d4, 0.75);
     fillLightCool.position.set(-4, 5, -6);
     scene.add(fillLightCool);
-    
-    const rimLight = new THREE.DirectionalLight(0xffe6c4, 0.85);
+    const rimLight = new THREE.DirectionalLight(0xffe6c4, 0.9);
     rimLight.position.set(-5, 8, -6);
     scene.add(rimLight);
-    
-    const backRim = new THREE.PointLight(0xffcc88, 0.75);
+    const backRim = new THREE.PointLight(0xffcc88, 0.8);
     backRim.position.set(0, 5, -10);
     scene.add(backRim);
-    
-    const hemiLight = new THREE.HemisphereLight(0xf0e6d8, 0xc4d0dc, 0.7);
+    const hemiLight = new THREE.HemisphereLight(0xf0e6d8, 0xc4d0dc, 0.75);
     scene.add(hemiLight);
-    
-    // Additional fill from below to reduce harsh shadows
-    const fillBottom = new THREE.PointLight(0xccaa88, 0.45);
+    const fillBottom = new THREE.PointLight(0xccaa88, 0.5);
     fillBottom.position.set(0, -3, 0);
     scene.add(fillBottom);
 
@@ -432,7 +494,6 @@
     const infoContentDiv = document.getElementById("infoContent");
     const resetBtn = document.getElementById("resetViewBtn");
     const loadingEl = document.getElementById("loadingIndicator");
-
     const raycaster = new THREE.Raycaster();
     const mouseVec = new THREE.Vector2();
     let mouseX = 0, mouseY = 0;
@@ -465,29 +526,21 @@
     function showInfo(key) {
       const displayKey = key.toLowerCase();
       const headerName = tooltipNames[displayKey] || displayKey.replace(/_/g,' ');
-      infoContentDiv.innerHTML = `<div style="background:#E5DACF30;padding:6px 12px;border-radius:44px;margin-bottom:14px;font-size:0.7rem;font-weight:600;color:#7A6048;text-align:center;">🔍 ${headerName.toUpperCase()}</div>${damInfo[displayKey] || damInfo.general}`;
+      infoContentDiv.innerHTML = `<div style="background:rgba(230, 215, 190, 0.3);padding:8px 14px;border-radius:48px;margin-bottom:18px;font-size:0.7rem;font-weight:700;color:#846B4E;text-align:center;letter-spacing:0.8px;">🔍 ${headerName.toUpperCase()}</div>${damInfo[displayKey] || damInfo.general}`;
     }
 
-    // EXTREME ZOOM OUT - even more than before!
     function setOptimalCameraForModel() {
       if (!damModel) return;
       const box = new THREE.Box3().setFromObject(damModel);
       modelCenter = box.getCenter(new THREE.Vector3());
       const sizeVec = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(sizeVec.x, sizeVec.y, sizeVec.z);
-      
       let distanceFactor = 2.2;
-      // Concrete Gravity Dam gets ULTRA zoom out - maximum visibility!
-      if (currentModelPath === "models/dam.glb") {
-        distanceFactor = 6.0;   // MASSIVE zoom out - full context view
-      } else if (currentModelPath === "models/dam2.glb") {
-        distanceFactor = 2.8;
-      } else if (currentModelPath === "models/dam3.glb") {
-        distanceFactor = 3.2;
-      }
-      
+      if (currentModelPath === "models/dam.glb") distanceFactor = 6.0;
+      else if (currentModelPath === "models/dam2.glb") distanceFactor = 2.8;
+      else if (currentModelPath === "models/dam3.glb") distanceFactor = 3.2;
       const distance = Math.max(maxDim * distanceFactor, 25);
-      const yOffset = modelCenter.y + maxDim * 0.12;  // Slightly elevated view
+      const yOffset = modelCenter.y + maxDim * 0.12;
       controls.target.copy(modelCenter);
       camera.position.set(modelCenter.x, yOffset, modelCenter.z + distance);
       controls.update();
@@ -510,14 +563,8 @@
             child.castShadow = true;
             child.receiveShadow = true;
             if (child.material) {
-              // Enhance material properties for better color rendering
               if (Array.isArray(child.material)) {
-                child.material.forEach(m => { 
-                  if(m) {
-                    m.roughness = Math.max(0.3, m.roughness || 0.4);
-                    m.metalness = Math.min(0.4, m.metalness || 0.1);
-                  }
-                });
+                child.material.forEach(m => { if(m) { m.roughness = Math.max(0.3, m.roughness || 0.4); m.metalness = Math.min(0.4, m.metalness || 0.1); } });
               } else { 
                 child.material.roughness = Math.max(0.3, child.material.roughness || 0.4);
                 child.material.metalness = Math.min(0.4, child.material.metalness || 0.1);
@@ -529,7 +576,7 @@
         isLoading = false;
         loadingEl.classList.remove("active");
         const modelName = modelConfigs[modelPath]?.name || "Dam Model";
-        infoContentDiv.innerHTML = `<div style="background:#E5DACF30;padding:6px 12px;border-radius:44px;margin-bottom:14px;font-size:0.7rem;color:#7A6048;text-align:center;">✓ ${modelName} LOADED</div>${damInfo.general}`;
+        infoContentDiv.innerHTML = `<div style="background:rgba(230, 215, 190, 0.3);padding:6px 12px;border-radius:44px;margin-bottom:16px;font-size:0.7rem;color:#7A5E40;text-align:center;">✓ ${modelName} LOADED</div>${damInfo.general}`;
       }, undefined, (err) => {
         console.error(err);
         isLoading = false;
@@ -538,7 +585,6 @@
       });
     }
 
-    // Event Listeners
     window.addEventListener("mousedown", () => { isDragging = false; });
     window.addEventListener("mousemove", (e) => { 
       isDragging = true; 
@@ -557,10 +603,9 @@
       highlight(obj);
       const engineeringKey = objectPartMap[obj.name];
       if (engineeringKey) showInfo(engineeringKey);
-      else infoContentDiv.innerHTML = `<div style="text-align:center;opacity:0.7;">📌 Component: <b>${obj.name || "Structural element"}</b><br>Engineering details pending.</div>`;
+      else infoContentDiv.innerHTML = `<div style="text-align:center;opacity:0.8;">📌 Component: <b>${obj.name || "Structural element"}</b><br>Engineering details pending.</div>`;
     });
 
-    // Model Chip UI
     const chipButtons = document.querySelectorAll(".model-chip");
     function setActiveChip(modelPath) {
       chipButtons.forEach(btn => {
@@ -580,7 +625,6 @@
     });
     setActiveChip("models/dam.glb");
 
-    // Reset button with extreme zoom out
     resetBtn.addEventListener("click", () => {
       if (damModel) {
         setOptimalCameraForModel();
@@ -622,9 +666,6 @@
     showInfo("general");
     loadModel("models/dam.glb");
     animate();
-
-    window.__orbitControls = controls;
-    window.__cameraInstance = camera;
   </script>
 </body>
 </html>
