@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Dam Engineering Simulator | Precision Controls</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #F5F0EA;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(250, 246, 240, 0.86);
+      backdrop-filter: blur(18px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      z-index: 1100;
+      border-bottom: 1px solid rgba(75, 60, 45, 0.12);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #2C2418;
+      text-transform: uppercase;
+      background: rgba(80, 65, 50, 0.06);
+      padding: 6px 14px;
+      border-radius: 36px;
+      backdrop-filter: blur(2px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .logo:hover {
+      background: rgba(80, 65, 50, 0.12);
+      transform: scale(0.98);
+    }
+
+    .logo a {
+      text-decoration: none;
+      color: #2C2418;
+    }
+
+    .center-model-selector {
+      position: fixed;
+      top: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1100;
+      background: rgba(250, 246, 240, 0.92);
+      backdrop-filter: blur(20px);
+      border-radius: 56px;
+      padding: 6px 12px;
+      display: flex;
+      gap: 8px;
+      border: 1px solid rgba(60, 45, 30, 0.2);
+      box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.1);
+    }
+
+    .model-chip {
+      background: transparent;
+      border: none;
+      padding: 8px 22px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      color: #4A3B2C;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    .model-chip.active {
+      background: #2C2418;
+      color: #FEF7F0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .model-chip:hover:not(.active) {
+      background: rgba(44, 36, 24, 0.08);
+    }
+
+    .nav-btn {
+      background: rgba(44, 36, 24, 0.05);
+      border: 1px solid rgba(44, 36, 24, 0.2);
+      color: #2C2418;
+      padding: 8px 20px;
+      border-radius: 32px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-btn:hover {
+      background: rgba(44, 36, 24, 0.1);
+      border-color: rgba(44, 36, 24, 0.4);
+      transform: translateY(-1px);
+    }
+
+    #infoPanel {
+      position: absolute;
+      right: 28px;
+      top: 100px;
+      width: 360px;
+      background: rgba(250, 246, 240, 0.96);
+      backdrop-filter: blur(24px);
+      border-radius: 28px;
+      border: 1px solid rgba(80, 65, 50, 0.2);
+      overflow: hidden;
+      z-index: 100;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    .panel-header {
+      padding: 20px 24px 12px;
+      border-bottom: 1px solid rgba(60, 45, 30, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-header .icon-badge {
+      width: 32px;
+      height: 32px;
+      background: rgba(80, 65, 50, 0.15);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .panel-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #6B5A48;
+    }
+
+    .panel-content {
+      padding: 22px 24px 28px;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+      color: #2C2418;
+    }
+
+    #infoContent {
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    #infoContent h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      color: #1F1A12;
+      font-family: 'Space Grotesk', monospace;
+    }
+
+    #infoContent b {
+      font-weight: 600;
+      color: #6B4C2C;
+    }
+
+    #infoContent ul {
+      margin: 14px 0;
+      padding-left: 20px;
+    }
+
+    .panel-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .panel-content::-webkit-scrollbar-track {
+      background: rgba(80, 65, 50, 0.08);
+      border-radius: 8px;
+    }
+    .panel-content::-webkit-scrollbar-thumb {
+      background: rgba(80, 65, 50, 0.35);
+      border-radius: 8px;
+    }
+
+    #tooltip {
+      position: absolute;
+      background: rgba(30, 25, 20, 0.92);
+      backdrop-filter: blur(12px);
+      color: #F9F2E7;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: none;
+      pointer-events: none;
+      z-index: 1200;
+      font-family: 'Inter', monospace;
+      border: 1px solid rgba(255, 240, 220, 0.2);
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .loading-indicator {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1F1A12;
+      color: #FCF7F0;
+      padding: 10px 28px;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 1200;
+      backdrop-filter: blur(12px);
+      background: rgba(30, 25, 20, 0.9);
+      border: 1px solid rgba(255, 240, 210, 0.2);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      white-space: nowrap;
+    }
+    .loading-indicator.active {
+      opacity: 1;
+    }
+
+    .controls-note {
+      position: fixed;
+      bottom: 18px;
+      left: 20px;
+      font-size: 0.7rem;
+      color: rgba(60, 45, 30, 0.5);
+      background: rgba(250, 246, 240, 0.7);
+      backdrop-filter: blur(6px);
+      padding: 5px 14px;
+      border-radius: 28px;
+      pointer-events: none;
+      font-family: monospace;
+      z-index: 100;
+    }
+
+    @media (max-width: 800px) {
+      #infoPanel { width: 300px; right: 16px; top: 95px; }
+      .center-model-selector { top: 75px; padding: 4px 10px; gap: 4px; }
+      .model-chip { padding: 5px 14px; font-size: 0.7rem; }
+    }
+    @media (max-width: 600px) {
+      .center-model-selector { width: 90%; justify-content: center; }
+      .model-chip { padding: 6px 12px; }
+      .logo { font-size: 0.75rem; padding: 4px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo"><a href="index.html">DAM ENGINEERING</a></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="resetViewBtn">⟳ Reset View</button>
+    </div>
+  </div>
+
+  <div class="center-model-selector" id="modelChipGroup">
+    <button class="model-chip" data-model="models/dam.glb">Concrete Gravity</button>
+    <button class="model-chip" data-model="models/dam2.glb">Earthfill Dam</button>
+    <button class="model-chip" data-model="models/dam3.glb">Arch Dam</button>
+  </div>
+
+  <div id="tooltip"></div>
+  <div class="controls-note">🖱️ Drag to orbit • Scroll zoom • Right-click pan</div>
+
+  <div id="infoPanel">
+    <div class="panel-header">
+      <div class="icon-badge">📐</div>
+      <span class="panel-title">ENGINEERING INSIGHTS</span>
+    </div>
+    <div class="panel-content">
+      <p id="infoContent">Click on any part of the dam to begin learning.</p>
+    </div>
+  </div>
+
+  <div class="loading-indicator" id="loadingIndicator">Loading dam model...</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.158.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "https://unpkg.com/three@0.158.0/examples/jsm/loaders/GLTFLoader.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js";
+
+    const modelConfigs = {
+      "models/dam.glb": {
+        name: "Concrete Gravity Dam",
+        partMap: {
+          "BuildingMesh-00155001_65": "reservoir","BuildingMesh-00141001_60": "terrain","BuildingMesh-00142001_61": "terrain","BuildingMesh-00129001_58": "terrain",
+          "BuildingMesh-00110001_52": "terrain","BuildingMesh-00171001_76": "terrain","BuildingMesh-00079001_37": "terrain","BuildingMesh-00044001_16": "terrain",
+          "BuildingMesh-00035001_11": "terrain","BuildingMesh-00032001_10": "reservoir","BuildingMesh-00010001_0": "terrain","BuildingMesh-00028001_8": "terrain",
+          "BuildingMesh-00040001_14": "terrain","BuildingMesh-00026001_6": "terrain","BuildingMesh-00161001_68": "terrain","BuildingMesh-00162001_69": "terrain",
+          "BuildingMesh-00024001_4": "terrain","BuildingMesh-00029001_9": "terrain","BuildingMesh-00018001_2": "terrain","BuildingMesh-00025001_5": "terrain",
+          "BuildingMesh-00050001_20": "terrain","BuildingMesh-00059001_24": "terrain","BuildingMesh-00060001_25": "terrain","BuildingMesh-00076001_35": "terrain",
+          "BuildingMesh-00090001_42": "terrain","BuildingMesh-00119001_55": "terrain","BuildingMesh-00149001_63": "terrain","BuildingMesh-00156001_66": "terrain",
+          "BuildingMesh-00157001_67": "terrain","BuildingMesh-00134001_59": "terrain","BuildingMesh-00109001_51": "intake","BuildingMesh-00091001_43": "terrain",
+          "BuildingMesh-00180001_82": "terrain","BuildingMesh-00168001_73": "terrain","BuildingMesh-00047001_18": "terrain","BuildingMesh-00051001_21": "terrain",
+          "BuildingMesh-00049001_19": "terrain","BuildingMesh-00069001_31": "terrain","BuildingMesh-00098001_46": "terrain","BuildingMesh-00198001_98": "terrain",
+          "BuildingMesh-00186001_87": "terrain","BuildingMesh-00061001_26": "terrain","BuildingMesh-00036001_12": "terrain","BuildingMesh-00056001_23": "terrain",
+          "BuildingMesh-00046001_17": "reservoir","BuildingMesh-00148001_62": "reservoir","BuildingMesh-00120001_56": "reservoir","BuildingMesh-00083001_38": "dam_wall",
+          "BuildingMesh-00084001_39": "reservoir","BuildingMesh-00072001_32": "gates","BuildingMesh-00074001_34": "powerhouse","BuildingMesh-00073001_33": "foundation",
+          "BuildingMesh-00187001_88": "outlet","BuildingMesh-00188001_89": "outlet","BuildingMesh-00196001_96": "dam_wall","BuildingMesh-00055001_22": "terrain",
+          "BuildingMesh-00169001_74": "terrain","BuildingMesh-00170001_75": "foundation","BuildingMesh-00195001_95": "foundation"
+        }
+      },
+      "models/dam2.glb": { name: "Earthfill Dam", partMap: {} },
+      "models/dam3.glb": { name: "Arch Dam", partMap: {} }
+    };
+
+    let objectPartMap = modelConfigs["models/dam.glb"].partMap;
+
+    const damInfo = {
+      dam_wall: `<h3>⬟ Dam Wall</h3><b>Structural backbone</b><br>Primary barrier withstanding hydrostatic pressure. Engineered to resist sliding, overturning, and internal uplift.<br><br><b>Key engineering metrics:</b><ul><li>Stability factor >1.5 against sliding</li><li>Compressive stress limits (concrete: 7–25 MPa)</li><li>Seepage cutoff & drainage system</li></ul><b>Materials:</b> Roller-compacted concrete / mass concrete.`,
+      reservoir: `<h3>💧 Reservoir</h3><b>Water storage lifeline</b><br>Man-made lake formed behind dam. Storage is zoned into:<ul><li><b>Dead storage:</b> sediment trap, below outlet inverts</li><li><b>Active storage:</b> usable for power, irrigation, municipal supply</li><li><b>Flood control storage:</b> temporary surcharge</li></ul>Operational rule curves manage drought & flood risks.`,
+      powerhouse: `<h3>⚡ Powerhouse</h3><b>Hydropower conversion</b><br>Transforms hydraulic energy → mechanical → electrical. High-efficiency turbines matched to head & flow.<br><br><b>Turbine types:</b> Francis (medium head), Kaplan (low head), Pelton (high head).`,
+      terrain: `<h3>⛰️ Abutments & Terrain</h3><b>Geotechnical interface</b><br>Natural valley walls that stabilize the dam. Critical for arch dams where thrust transfers entirely to rock abutments.`,
+      spillway: `<h3>🌊 Spillway</h3><b>Flood discharge system</b><br>Prevents overtopping and uncontrolled release. Design flood (PMF) routed through ogee crest or chute.`,
+      gates: `<h3>⚙️ Control Gates</h3><b>Flow regulation</b><br>Radial (Tainter) gates, sluice gates, or vertical lift. Essential for reservoir release and emergency drawdown.`,
+      intake: `<h3>🚰 Intake Structure</h3><b>Water entry portal</b><br>Trash racks remove debris, emergency gates provide shut-off, penstocks convey water to turbines.`,
+      outlet: `<h3>💦 Outlet Works</h3><b>Controlled release</b><br>Allows release of environmental flows, irrigation supply, or reservoir lowering for maintenance.`,
+      foundation: `<h3>⛏️ Foundation</h3><b>Load transfer zone</b><br>Rigorous grouting, consolidation grouting, and drainage galleries prevent uplift pressure.`,
+      general: `<h3>🏛️ Dam Engineering Interactive</h3><b>Explore 3D hydraulic structures</b><br>A dam is a critical infrastructure for:<ul><li>Water supply & irrigation</li><li>Hydroelectric generation</li><li>Flood risk reduction</li><li>Navigation & recreation</li></ul><hr><i>Click any colored element for technical insights.</i>`
+    };
+    const tooltipNames = { foundation: "Foundation", dam_wall: "Dam Wall", reservoir: "Reservoir", spillway: "Spillway", gates: "Gates", powerhouse: "Power House", intake: "Intake", outlet: "Outlet Works", terrain: "Abutments" };
+
+    // THREE.JS Setup - NO FOG to keep colors vibrant!
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xF5F0EA);
+    // REMOVED FOG - fog was causing faded/washed out colors at distance
+    // scene.fog = null;  // Explicitly no fog - colors stay rich and vibrant
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500); // Increased far plane for extreme zoom out
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.rotateSpeed = 1.2;
+    controls.zoomSpeed = 1.2;
+    controls.panSpeed = 0.9;
+    controls.screenSpacePanning = true;
+    controls.maxPolarAngle = Math.PI / 1.9;
+    controls.minDistance = 3.5;
+    controls.maxDistance = 200;  // Massive range for extreme zoom out
+
+    // SUPERCHARGED LIGHTING - brighter, more vibrant colors
+    const ambient = new THREE.AmbientLight(0xffffff, 0.95);  // Increased ambient for better base brightness
+    scene.add(ambient);
+    
+    const sunLight = new THREE.DirectionalLight(0xfff5e6, 1.8);
+    sunLight.position.set(10, 20, 8);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 100;
+    sunLight.shadow.camera.left = -15;
+    sunLight.shadow.camera.right = 15;
+    sunLight.shadow.camera.top = 15;
+    sunLight.shadow.camera.bottom = -15;
+    scene.add(sunLight);
+    
+    const fillLightWarm = new THREE.PointLight(0xd4b88a, 0.9);
+    fillLightWarm.position.set(5, 6, 8);
+    scene.add(fillLightWarm);
+    
+    const fillLightCool = new THREE.PointLight(0xa8c4d4, 0.7);
+    fillLightCool.position.set(-4, 5, -6);
+    scene.add(fillLightCool);
+    
+    const rimLight = new THREE.DirectionalLight(0xffe6c4, 0.85);
+    rimLight.position.set(-5, 8, -6);
+    scene.add(rimLight);
+    
+    const backRim = new THREE.PointLight(0xffcc88, 0.75);
+    backRim.position.set(0, 5, -10);
+    scene.add(backRim);
+    
+    const hemiLight = new THREE.HemisphereLight(0xf0e6d8, 0xc4d0dc, 0.7);
+    scene.add(hemiLight);
+    
+    // Additional fill from below to reduce harsh shadows
+    const fillBottom = new THREE.PointLight(0xccaa88, 0.45);
+    fillBottom.position.set(0, -3, 0);
+    scene.add(fillBottom);
+
+    let damModel = null;
+    let selectedObject = null;
+    let modelCenter = new THREE.Vector3(0,0,0);
+    let currentModelPath = "models/dam.glb";
+    let isLoading = false;
+
+    const tooltipDiv = document.getElementById("tooltip");
+    const infoContentDiv = document.getElementById("infoContent");
+    const resetBtn = document.getElementById("resetViewBtn");
+    const loadingEl = document.getElementById("loadingIndicator");
+
+    const raycaster = new THREE.Raycaster();
+    const mouseVec = new THREE.Vector2();
+    let mouseX = 0, mouseY = 0;
+    let isDragging = false;
+
+    function clearHighlight(obj) {
+      if (!obj) return;
+      const resetMat = (mat) => { if (mat && mat.emissive) { mat.emissive.setHex(0x000000); mat.emissiveIntensity = 0; } };
+      if (Array.isArray(obj.material)) obj.material.forEach(resetMat);
+      else resetMat(obj.material);
+    }
+
+    function highlight(obj) {
+      if (selectedObject && selectedObject !== obj) clearHighlight(selectedObject);
+      selectedObject = obj;
+      const applyEmissive = (mat) => { if (mat && mat.emissive) { mat.emissive.setHex(0xAA8C64); mat.emissiveIntensity = 0.55; } };
+      if (Array.isArray(obj.material)) obj.material.forEach(applyEmissive);
+      else applyEmissive(obj.material);
+    }
+
+    function pickObject(hit) {
+      let obj = hit.object;
+      for (let i = 0; i < 3 && obj.parent && obj.parent !== damModel; i++) {
+        if (obj.parent.name && !obj.parent.name.startsWith("Object_") && obj.parent.name !== "") return obj.parent;
+        obj = obj.parent;
+      }
+      return obj;
+    }
+
+    function showInfo(key) {
+      const displayKey = key.toLowerCase();
+      const headerName = tooltipNames[displayKey] || displayKey.replace(/_/g,' ');
+      infoContentDiv.innerHTML = `<div style="background:#E5DACF30;padding:6px 12px;border-radius:44px;margin-bottom:14px;font-size:0.7rem;font-weight:600;color:#7A6048;text-align:center;">🔍 ${headerName.toUpperCase()}</div>${damInfo[displayKey] || damInfo.general}`;
+    }
+
+    // EXTREME ZOOM OUT - even more than before!
+    function setOptimalCameraForModel() {
+      if (!damModel) return;
+      const box = new THREE.Box3().setFromObject(damModel);
+      modelCenter = box.getCenter(new THREE.Vector3());
+      const sizeVec = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(sizeVec.x, sizeVec.y, sizeVec.z);
+      
+      let distanceFactor = 2.2;
+      // Concrete Gravity Dam gets ULTRA zoom out - maximum visibility!
+      if (currentModelPath === "models/dam.glb") {
+        distanceFactor = 6.0;   // MASSIVE zoom out - full context view
+      } else if (currentModelPath === "models/dam2.glb") {
+        distanceFactor = 2.8;
+      } else if (currentModelPath === "models/dam3.glb") {
+        distanceFactor = 3.2;
+      }
+      
+      const distance = Math.max(maxDim * distanceFactor, 25);
+      const yOffset = modelCenter.y + maxDim * 0.12;  // Slightly elevated view
+      controls.target.copy(modelCenter);
+      camera.position.set(modelCenter.x, yOffset, modelCenter.z + distance);
+      controls.update();
+    }
+
+    function loadModel(modelPath) {
+      if (isLoading) return;
+      isLoading = true;
+      loadingEl.classList.add("active");
+      if (damModel) scene.remove(damModel);
+      if (selectedObject) clearHighlight(selectedObject);
+      selectedObject = null;
+      objectPartMap = modelConfigs[modelPath]?.partMap || {};
+      const loader = new GLTFLoader();
+      loader.load(modelPath, (gltf) => {
+        damModel = gltf.scene;
+        scene.add(damModel);
+        damModel.traverse(child => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              // Enhance material properties for better color rendering
+              if (Array.isArray(child.material)) {
+                child.material.forEach(m => { 
+                  if(m) {
+                    m.roughness = Math.max(0.3, m.roughness || 0.4);
+                    m.metalness = Math.min(0.4, m.metalness || 0.1);
+                  }
+                });
+              } else { 
+                child.material.roughness = Math.max(0.3, child.material.roughness || 0.4);
+                child.material.metalness = Math.min(0.4, child.material.metalness || 0.1);
+              }
+            }
+          }
+        });
+        setOptimalCameraForModel();
+        isLoading = false;
+        loadingEl.classList.remove("active");
+        const modelName = modelConfigs[modelPath]?.name || "Dam Model";
+        infoContentDiv.innerHTML = `<div style="background:#E5DACF30;padding:6px 12px;border-radius:44px;margin-bottom:14px;font-size:0.7rem;color:#7A6048;text-align:center;">✓ ${modelName} LOADED</div>${damInfo.general}`;
+      }, undefined, (err) => {
+        console.error(err);
+        isLoading = false;
+        loadingEl.classList.remove("active");
+        infoContentDiv.innerHTML = `<h3>⚠️ Load error</h3><p>Could not load ${modelPath}. Ensure files exist.</p>`;
+      });
+    }
+
+    // Event Listeners
+    window.addEventListener("mousedown", () => { isDragging = false; });
+    window.addEventListener("mousemove", (e) => { 
+      isDragging = true; 
+      mouseX = e.clientX; 
+      mouseY = e.clientY; 
+      mouseVec.x = (e.clientX / renderer.domElement.clientWidth) * 2 - 1; 
+      mouseVec.y = -(e.clientY / renderer.domElement.clientHeight) * 2 + 1; 
+    });
+    window.addEventListener("click", (e) => {
+      if (isDragging || !damModel || isLoading) return;
+      const m = new THREE.Vector2((e.clientX / renderer.domElement.clientWidth) * 2 - 1, -(e.clientY / renderer.domElement.clientHeight) * 2 + 1);
+      const rc = new THREE.Raycaster(); rc.setFromCamera(m, camera);
+      const hits = rc.intersectObjects(damModel.children, true);
+      if (!hits.length) return;
+      const obj = pickObject(hits[0]);
+      highlight(obj);
+      const engineeringKey = objectPartMap[obj.name];
+      if (engineeringKey) showInfo(engineeringKey);
+      else infoContentDiv.innerHTML = `<div style="text-align:center;opacity:0.7;">📌 Component: <b>${obj.name || "Structural element"}</b><br>Engineering details pending.</div>`;
+    });
+
+    // Model Chip UI
+    const chipButtons = document.querySelectorAll(".model-chip");
+    function setActiveChip(modelPath) {
+      chipButtons.forEach(btn => {
+        if (btn.getAttribute("data-model") === modelPath) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+    }
+    chipButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const path = btn.getAttribute("data-model");
+        if (path !== currentModelPath && !isLoading) {
+          currentModelPath = path;
+          setActiveChip(currentModelPath);
+          loadModel(currentModelPath);
+        }
+      });
+    });
+    setActiveChip("models/dam.glb");
+
+    // Reset button with extreme zoom out
+    resetBtn.addEventListener("click", () => {
+      if (damModel) {
+        setOptimalCameraForModel();
+        if (selectedObject) clearHighlight(selectedObject);
+        selectedObject = null;
+        controls.update();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animateTooltip() {
+      if (!damModel || isLoading) return;
+      raycaster.setFromCamera(mouseVec, camera);
+      const intersects = raycaster.intersectObjects(damModel.children, true);
+      if (intersects.length) {
+        const obj = pickObject(intersects[0]);
+        const keyName = objectPartMap[obj.name];
+        if (keyName && tooltipNames[keyName]) {
+          tooltipDiv.style.display = "block";
+          tooltipDiv.style.left = mouseX + 16 + "px";
+          tooltipDiv.style.top = mouseY + 16 + "px";
+          tooltipDiv.innerHTML = tooltipNames[keyName];
+        } else tooltipDiv.style.display = "none";
+      } else tooltipDiv.style.display = "none";
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      animateTooltip();
+      renderer.render(scene, camera);
+    }
+
+    showInfo("general");
+    loadModel("models/dam.glb");
+    animate();
+
+    window.__orbitControls = controls;
+    window.__cameraInstance = camera;
+  </script>
+</body>
+</html>
